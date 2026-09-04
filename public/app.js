@@ -8,6 +8,7 @@ const state = {
   tourActive: localStorage.getItem('walkthroughSeen-v1')!=='true', tourStep: 0, tourRestoreCollapsed: false,
   employeeFilters: { position:'SEMUA', gender:'SEMUA', city:'SEMUA', status:'SEMUA', outlet:'SEMUA' }
 };
+const pendingPointSaves = new Set();
 
 const icons = {
   dashboard: '<path d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z"/>',
@@ -315,7 +316,33 @@ function bind(){
   document.querySelectorAll('[data-member-search]').forEach(input=>input.addEventListener('change',()=>{const employee=state.employees.find(e=>e.name.toLowerCase()===input.value.trim().toLowerCase()&&e.position!=='KAPTEN');if(!employee){input.setCustomValidity('Pilih nama anggota dari daftar.');input.reportValidity();return;}state.rotationDraft[employee.id]={outletId:input.dataset.memberSearch,captainGroup:input.dataset.group};render()}));document.querySelectorAll('[data-member-remove]').forEach(b=>b.addEventListener('click',()=>{state.rotationDraft[b.dataset.memberRemove].outletId='';render()}));document.querySelectorAll('[data-captain-edit]').forEach(b=>b.addEventListener('click',()=>captainModal(b.dataset.captainEdit,b.dataset.group)));
 }
 
-async function savePointCard(ruleId){const selected=state.cardSelections[ruleId]||{};try{const result=await api('/api/entry-batches',{method:'POST',body:JSON.stringify({date:state.entryDate||new Date().toISOString().slice(0,10),ruleId,items:Object.entries(selected).map(([employeeId,quantity])=>({employeeId,quantity}))})});delete state.cardSelections[ruleId];await load();render();toast(result.action==='REMOVED'?`${result.entries.length} poin otomatis berhasil dihapus.`:`${result.entries.length} poin berhasil dicatat.`);}catch(error){toast(error.message,'error')}}
+function adjustAnnualScore(employeeId,date,delta){if(!date.startsWith(`${state.recapYear}-`)||!delta)return;const month=date.slice(0,7),score=state.annualScores.find(item=>item.employeeId===employeeId&&item.month===month);if(score)score.total=Number(score.total||0)+Number(delta);else state.annualScores.push({employeeId,month,total:Number(delta)});}
+async function savePointCard(ruleId){
+  if(pendingPointSaves.has(ruleId))return;
+  const selected=state.cardSelections[ruleId]||{},items=Object.entries(selected).map(([employeeId,quantity])=>({employeeId,quantity}));
+  if(!items.length)return;
+  const date=state.entryDate||new Date().toISOString().slice(0,10),button=document.querySelector(`[data-save-card="${ruleId}"]`),originalLabel=button?.textContent;
+  pendingPointSaves.add(ruleId);
+  if(button){button.disabled=true;button.setAttribute('aria-busy','true');button.textContent='Menyimpan…';}
+  try{
+    const result=await api('/api/entry-batches',{method:'POST',body:JSON.stringify({date,ruleId,items})});
+    delete state.cardSelections[ruleId];
+    if(result.action==='REMOVED'){
+      for(const exclusion of result.entries){const removed=state.entries.filter(entry=>entry.employeeId===exclusion.employeeId&&entry.ruleId===exclusion.ruleId&&entry.date===exclusion.date&&entry.entryKind==='AUTO');removed.forEach(entry=>adjustAnnualScore(entry.employeeId,entry.date,-entry.totalPoints));state.entries=state.entries.filter(entry=>!removed.includes(entry));state.autoExclusions.unshift(exclusion);}
+    }else if(result.action==='ADDED'){
+      for(const entry of result.entries){if(entry.date.startsWith(state.month))state.entries.unshift(entry);adjustAnnualScore(entry.employeeId,entry.date,entry.totalPoints);}
+    }else{
+      await load();
+    }
+    render();
+    toast(result.action==='REMOVED'?`${result.entries.length} poin otomatis berhasil dihapus.`:result.action==='CANCELLED'?'Poin target berhasil dibatalkan.':`${result.entries.length} poin berhasil dicatat.`);
+  }catch(error){
+    if(button){button.disabled=false;button.removeAttribute('aria-busy');button.textContent=originalLabel;}
+    toast(error.message,'error');
+  }finally{
+    pendingPointSaves.delete(ruleId);
+  }
+}
 async function restoreAutomaticPoint(id){try{await api(`/api/entries/${id}`,{method:'DELETE'});await load();render();toast('Poin otomatis berhasil dipulihkan.');}catch(error){toast(error.message,'error')}}
 async function saveDayOff(){const input=document.querySelector('#day-off-search'),employee=state.employees.find(e=>e.name.toLowerCase()===input.value.trim().toLowerCase());if(!employee){input.setCustomValidity('Pilih nama karyawan dari daftar.');input.reportValidity();return;}try{await api('/api/days-off',{method:'POST',body:JSON.stringify({employeeId:employee.id,date:state.entryDate||new Date().toISOString().slice(0,10)})});await load();render();toast(`${employee.name} ditandai OFF.`);}catch(error){toast(error.message,'error')}}
 async function restoreDayOff(id){try{await api(`/api/days-off/${id}`,{method:'DELETE'});await load();render();toast('Status OFF dibatalkan dan poin otomatis dipulihkan.');}catch(error){toast(error.message,'error')}}
