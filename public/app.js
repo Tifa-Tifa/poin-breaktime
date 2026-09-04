@@ -51,13 +51,13 @@ function toast(message, type='') {
 }
 
 function navButton(page, label, iconName, badge='') {
-  return `<button class="nav-button ${state.page===page?'active':''}" data-page="${page}">${icon(iconName)}<span>${label}</span>${badge?`<span class="badge">${badge}</span>`:''}</button>`;
+  return `<button class="nav-button ${state.page===page?'active':''}" data-page="${page}" aria-label="${label}">${icon(iconName)}<span>${label}</span>${badge?`<span class="badge">${badge}</span>`:''}</button>`;
 }
 
 function shell(content) {
   return `<div class="app-shell ${state.sidebarCollapsed?'sidebar-collapsed':''}">
     <aside class="sidebar" id="sidebar" data-tour="sidebar">
-      <div class="brand"><span class="brand-logo-frame"><img src="/assets/breaktime-logo.png" alt="Breaktime"></span></div>
+      <div class="brand"><span class="brand-logo-frame"><img src="/assets/breaktime-logo.png" alt="Breaktime" width="480" height="320" decoding="async"></span></div>
       <button class="sidebar-collapse" id="sidebar-collapse" title="Tutup atau kecilkan navigasi" aria-label="Tutup atau kecilkan navigasi">${icon('chevron')}</button>
       <div class="nav-label">Utama</div>
       ${navButton('dashboard','Dashboard','dashboard')}
@@ -72,7 +72,7 @@ function shell(content) {
     <button class="sidebar-backdrop" id="sidebar-backdrop" aria-label="Tutup menu navigasi"></button>
     <main class="main">
       <header class="topbar">
-        <button class="icon-button mobile-menu" id="mobile-menu">${icon('menu')}</button>
+        <button class="icon-button mobile-menu" id="mobile-menu" aria-label="Buka menu navigasi">${icon('menu')}</button>
         <div class="welcome"><span>Selamat datang,</span><strong>${state.role==='ADMIN'?'Administrator':'Viewer'}</strong></div>
         <label class="search" data-tour="search">${icon('search')}<input id="global-search" value="${state.search}" placeholder="Cari nama atau aktivitas…"></label>
         <div class="top-actions">
@@ -90,7 +90,7 @@ function pageHead(title, description, actions='') {
 }
 
 function filters(extra='') {
-  return `<div class="filter-group" data-tour="filters"><select class="filter" id="outlet-filter"><option value="SEMUA">Semua outlet</option>${state.outlets.filter(o=>o.status!=='INACTIVE').map(o=>`<option value="${o.name.toUpperCase()}" ${state.outlet===o.name.toUpperCase()?'selected':''}>${o.name}</option>`).join('')}</select><input class="filter" id="month-filter" type="month" value="${state.month}">${extra}</div>`;
+  return `<div class="filter-group" data-tour="filters"><select class="filter" id="outlet-filter" aria-label="Filter outlet"><option value="SEMUA">Semua outlet</option>${state.outlets.filter(o=>o.status!=='INACTIVE').map(o=>`<option value="${o.name.toUpperCase()}" ${state.outlet===o.name.toUpperCase()?'selected':''}>${o.name}</option>`).join('')}</select><input class="filter" id="month-filter" type="month" value="${state.month}" aria-label="Filter bulan">${extra}</div>`;
 }
 
 function dashboard() {
