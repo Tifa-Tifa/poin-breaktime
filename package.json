@@ -1,0 +1,14 @@
+{
+  "name": "poin-breaktime-dashboard",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Role-based point management dashboard",
+  "scripts": {
+    "start": "node server.js",
+    "check": "node --check server.js && node --check public/app.js && node --check lib/supabase.js && node --check lib/supabase-repository.js && node --check api/index.js",
+    "check:supabase": "node -e \"require('./lib/supabase'); console.log('Supabase client siap')\""
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.57.0"
+  }
+}

@@ -1,0 +1,1447 @@
+{
+  "employees": [
+    {
+      "id": "emp-rafly",
+      "name": "Rafly",
+      "role": "TERAPIS",
+      "gender": "PRIA",
+      "outlet": "MAKASSAR",
+      "active": true
+    },
+    {
+      "id": "emp-adi",
+      "name": "Adi",
+      "role": "AO",
+      "gender": "PRIA",
+      "outlet": "MAKASSAR",
+      "active": true
+    },
+    {
+      "id": "emp-ahmad",
+      "name": "Ahmad",
+      "role": "TERAPIS",
+      "gender": "PRIA",
+      "outlet": "MAKASSAR",
+      "active": true
+    },
+    {
+      "id": "emp-aulia",
+      "name": "Aulia",
+      "role": "TERAPIS",
+      "gender": "WANITA",
+      "outlet": "MAKASSAR",
+      "active": true
+    },
+    {
+      "id": "emp-azmi",
+      "name": "Azmi",
+      "role": "TERAPIS",
+      "gender": "PRIA",
+      "outlet": "MAKASSAR",
+      "active": true
+    },
+    {
+      "id": "emp-nurul",
+      "name": "Nurul",
+      "role": "KASIR",
+      "gender": "WANITA",
+      "outlet": "MAKASSAR",
+      "active": true
+    },
+    {
+      "id": "emp-widya",
+      "name": "Widya",
+      "role": "TERAPIS",
+      "gender": "WANITA",
+      "outlet": "MAKASSAR",
+      "active": true
+    },
+    {
+      "id": "emp-ikbal",
+      "name": "Ikbal",
+      "role": "TERAPIS",
+      "gender": "PRIA",
+      "outlet": "MAKASSAR",
+      "active": true
+    },
+    {
+      "id": "emp-syarif",
+      "name": "Syarif",
+      "role": "TERAPIS",
+      "gender": "PRIA",
+      "outlet": "PALU",
+      "active": true
+    },
+    {
+      "id": "emp-malik",
+      "name": "Malik",
+      "role": "TERAPIS",
+      "gender": "PRIA",
+      "outlet": "PALU",
+      "active": true
+    },
+    {
+      "id": "emp-miftah",
+      "name": "Miftah",
+      "role": "TERAPIS",
+      "gender": "WANITA",
+      "outlet": "PALU",
+      "active": true
+    },
+    {
+      "id": "emp-mei",
+      "name": "Mei",
+      "role": "AO",
+      "gender": "WANITA",
+      "outlet": "PALU",
+      "active": true
+    },
+    {
+      "id": "emp-novi",
+      "name": "Novi",
+      "role": "AO",
+      "gender": "WANITA",
+      "outlet": "PALU",
+      "active": true
+    }
+  ],
+  "rules": [
+    {
+      "id": "r-late5",
+      "description": "Lambat diatas 5 menit",
+      "category": "PENGURANGAN",
+      "points": -2,
+      "supportsMultiplier": false,
+      "roles": [
+        "AO",
+        "KASIR",
+        "TERAPIS"
+      ],
+      "frequency": "DAILY",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": false
+    },
+    {
+      "id": "r-late15",
+      "description": "Lambat diatas 15 menit",
+      "category": "PENGURANGAN",
+      "points": -5,
+      "supportsMultiplier": false,
+      "roles": [
+        "AO",
+        "KASIR",
+        "TERAPIS"
+      ],
+      "frequency": "DAILY",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": false
+    },
+    {
+      "id": "r-late30",
+      "description": "Lambat diatas 30 menit",
+      "category": "PENGURANGAN",
+      "points": -10,
+      "supportsMultiplier": false,
+      "roles": [
+        "AO",
+        "KASIR",
+        "TERAPIS"
+      ],
+      "frequency": "DAILY",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": false
+    },
+    {
+      "id": "r-sheet-001",
+      "description": "Keluar outlet tanpa izin",
+      "category": "PENGURANGAN",
+      "points": -5,
+      "supportsMultiplier": false,
+      "roles": [
+        "AO"
+      ],
+      "frequency": "DAILY",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": false
+    },
+    {
+      "id": "r-sp1",
+      "description": "SP 1",
+      "category": "PENGURANGAN",
+      "points": -5,
+      "supportsMultiplier": false,
+      "roles": [
+        "AO",
+        "KASIR",
+        "TERAPIS"
+      ],
+      "frequency": "EVENT",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": false
+    },
+    {
+      "id": "r-sp2",
+      "description": "SP 2",
+      "category": "PENGURANGAN",
+      "points": -10,
+      "supportsMultiplier": false,
+      "roles": [
+        "AO",
+        "KASIR",
+        "TERAPIS"
+      ],
+      "frequency": "EVENT",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": false
+    },
+    {
+      "id": "r-sp3",
+      "description": "SP 3",
+      "category": "PENGURANGAN",
+      "points": -15,
+      "supportsMultiplier": false,
+      "roles": [
+        "AO",
+        "KASIR",
+        "TERAPIS"
+      ],
+      "frequency": "EVENT",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": false
+    },
+    {
+      "id": "r-sheet-002",
+      "description": "Tidur di bed saat ada tamu",
+      "category": "PENGURANGAN",
+      "points": -3,
+      "supportsMultiplier": false,
+      "roles": [
+        "AO",
+        "KASIR",
+        "TERAPIS"
+      ],
+      "frequency": "EVENT",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": false
+    },
+    {
+      "id": "r-sheet-003",
+      "description": "Kehadiran 28 hari bisa kasbon (sesuai komisi)",
+      "category": "PENGURANGAN",
+      "points": -2,
+      "supportsMultiplier": false,
+      "roles": [
+        "AO",
+        "KASIR",
+        "TERAPIS"
+      ],
+      "frequency": "DAILY",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": false
+    },
+    {
+      "id": "r-sheet-004",
+      "description": "Kehadiran 27 hari bisa kasbon (max 500rb)",
+      "category": "PENGURANGAN",
+      "points": -2,
+      "supportsMultiplier": false,
+      "roles": [
+        "AO",
+        "KASIR",
+        "TERAPIS"
+      ],
+      "frequency": "DAILY",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": false
+    },
+    {
+      "id": "r-sheet-005",
+      "description": "Kehadiran 26 hari bisa kasbon (max 300rb)",
+      "category": "PENGURANGAN",
+      "points": -2,
+      "supportsMultiplier": false,
+      "roles": [
+        "AO",
+        "KASIR",
+        "TERAPIS"
+      ],
+      "frequency": "DAILY",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": false
+    },
+    {
+      "id": "r-sheet-006",
+      "description": "Kehadiran 25 hari tidak bisa kasbon",
+      "category": "PENGURANGAN",
+      "points": -2,
+      "supportsMultiplier": false,
+      "roles": [
+        "AO"
+      ],
+      "frequency": "DAILY",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": false
+    },
+    {
+      "id": "r-alpa",
+      "description": "ALPA",
+      "category": "PENGURANGAN",
+      "points": -15,
+      "supportsMultiplier": false,
+      "roles": [
+        "AO",
+        "KASIR",
+        "TERAPIS"
+      ],
+      "frequency": "DAILY",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": false
+    },
+    {
+      "id": "r-sheet-007",
+      "description": "Vote biasa saja",
+      "category": "PENGURANGAN",
+      "points": -5,
+      "supportsMultiplier": false,
+      "roles": [
+        "AO",
+        "KASIR",
+        "TERAPIS"
+      ],
+      "frequency": "EVENT",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": false
+    },
+    {
+      "id": "r-sheet-008",
+      "description": "Vote buruk",
+      "category": "PENGURANGAN",
+      "points": -10,
+      "supportsMultiplier": false,
+      "roles": [
+        "AO",
+        "KASIR",
+        "TERAPIS"
+      ],
+      "frequency": "EVENT",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": false
+    },
+    {
+      "id": "r-sheet-009",
+      "description": "Vote sangat buruk",
+      "category": "PENGURANGAN",
+      "points": -15,
+      "supportsMultiplier": false,
+      "roles": [
+        "AO",
+        "KASIR",
+        "TERAPIS"
+      ],
+      "frequency": "EVENT",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": false
+    },
+    {
+      "id": "r-sheet-010",
+      "description": "Tidak kerja tugas AO",
+      "category": "PENGURANGAN",
+      "points": -2.5,
+      "supportsMultiplier": false,
+      "roles": [
+        "AO"
+      ],
+      "frequency": "DAILY",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": false
+    },
+    {
+      "id": "r-sheet-011",
+      "description": "Tidak breafing pagi",
+      "category": "PENGURANGAN",
+      "points": -1,
+      "supportsMultiplier": false,
+      "roles": [
+        "AO",
+        "KASIR",
+        "TERAPIS"
+      ],
+      "frequency": "DAILY",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": false
+    },
+    {
+      "id": "r-sheet-012",
+      "description": "Tidak breafing sore",
+      "category": "PENGURANGAN",
+      "points": -1,
+      "supportsMultiplier": false,
+      "roles": [
+        "AO",
+        "KASIR",
+        "TERAPIS"
+      ],
+      "frequency": "DAILY",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": false
+    },
+    {
+      "id": "r-finger-no",
+      "description": "Tidak Finger",
+      "category": "PENGURANGAN",
+      "points": -1.5,
+      "supportsMultiplier": false,
+      "roles": [
+        "AO",
+        "KASIR",
+        "TERAPIS"
+      ],
+      "frequency": "DAILY",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": false
+    },
+    {
+      "id": "r-sheet-013",
+      "description": "Seluruh tim yang tukaran wajib (Piket)",
+      "category": "PENGURANGAN",
+      "points": -3,
+      "supportsMultiplier": false,
+      "roles": [
+        "AO",
+        "TERAPIS"
+      ],
+      "frequency": "EVENT",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": false
+    },
+    {
+      "id": "r-sheet-014",
+      "description": "Kosekuensi yang tidak datang tukaran wajib (Fullday)",
+      "category": "PENGURANGAN",
+      "points": -5,
+      "supportsMultiplier": false,
+      "roles": [
+        "AO",
+        "KASIR",
+        "TERAPIS"
+      ],
+      "frequency": "EVENT",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": false
+    },
+    {
+      "id": "r-uniform",
+      "description": "Tidak seragam",
+      "category": "PENGURANGAN",
+      "points": -3,
+      "supportsMultiplier": false,
+      "roles": [
+        "AO",
+        "KASIR",
+        "TERAPIS"
+      ],
+      "frequency": "DAILY",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": false
+    },
+    {
+      "id": "r-sheet-015",
+      "description": "OFF AO",
+      "category": "PENGURANGAN",
+      "points": -2.1,
+      "supportsMultiplier": false,
+      "roles": [
+        "AO"
+      ],
+      "frequency": "DAILY",
+      "active": false,
+      "isMultipliable": false,
+      "status": "INACTIVE",
+      "autoDaily": false
+    },
+    {
+      "id": "r-sheet-016",
+      "description": "Outlet seharian wangi, rapi & bersih",
+      "category": "PENAMBAHAN",
+      "points": 0.3,
+      "supportsMultiplier": false,
+      "roles": [
+        "AO"
+      ],
+      "frequency": "DAILY",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": true
+    },
+    {
+      "id": "r-sheet-017",
+      "description": "Stok Outlet aman seharian",
+      "category": "PENAMBAHAN",
+      "points": 0.3,
+      "supportsMultiplier": false,
+      "roles": [
+        "AO"
+      ],
+      "frequency": "DAILY",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": true
+    },
+    {
+      "id": "r-ontime",
+      "description": "Datang tepat waktu",
+      "category": "PENAMBAHAN",
+      "points": 0.5,
+      "supportsMultiplier": false,
+      "roles": [
+        "AO",
+        "KASIR",
+        "TERAPIS"
+      ],
+      "frequency": "DAILY",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": true
+    },
+    {
+      "id": "r-brief",
+      "description": "Breafing",
+      "category": "PENAMBAHAN",
+      "points": 0.5,
+      "supportsMultiplier": false,
+      "roles": [
+        "AO",
+        "KASIR",
+        "TERAPIS"
+      ],
+      "frequency": "DAILY",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": true
+    },
+    {
+      "id": "r-double",
+      "description": "Doble piket",
+      "category": "PENAMBAHAN",
+      "points": 3.3,
+      "supportsMultiplier": true,
+      "roles": [
+        "AO",
+        "KASIR",
+        "TERAPIS"
+      ],
+      "frequency": "EVENT",
+      "active": true,
+      "isMultipliable": true,
+      "status": "ACTIVE",
+      "autoDaily": false
+    },
+    {
+      "id": "r-development",
+      "description": "Membantu pengembangan",
+      "category": "PENAMBAHAN",
+      "points": 3.3,
+      "supportsMultiplier": false,
+      "roles": [
+        "AO",
+        "KASIR",
+        "TERAPIS"
+      ],
+      "frequency": "EVENT",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": false
+    },
+    {
+      "id": "r-sheet-018",
+      "description": "Membantu office",
+      "category": "PENAMBAHAN",
+      "points": 3.3,
+      "supportsMultiplier": false,
+      "roles": [
+        "AO"
+      ],
+      "frequency": "EVENT",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": false
+    },
+    {
+      "id": "r-captain",
+      "description": "Membantu kapten",
+      "category": "PENAMBAHAN",
+      "points": 3.3,
+      "supportsMultiplier": false,
+      "roles": [
+        "AO",
+        "KASIR",
+        "TERAPIS"
+      ],
+      "frequency": "EVENT",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": false
+    },
+    {
+      "id": "r-no-late-month",
+      "description": "Tidak pernah lambat dalam 1 bulan",
+      "category": "PENAMBAHAN",
+      "points": 3.3,
+      "supportsMultiplier": false,
+      "roles": [
+        "AO",
+        "KASIR",
+        "TERAPIS"
+      ],
+      "frequency": "MONTHLY",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": false,
+      "derivedType": "MONTHLY_ATTENDANCE"
+    },
+    {
+      "id": "r-sheet-019",
+      "description": "Tidak pernah lambat selama 1 pekan",
+      "category": "PENAMBAHAN",
+      "points": 3.3,
+      "supportsMultiplier": false,
+      "roles": [
+        "AO",
+        "KASIR",
+        "TERAPIS"
+      ],
+      "frequency": "WEEKLY",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": false,
+      "derivedType": "WEEKLY_ATTENDANCE"
+    },
+    {
+      "id": "r-sheet-020",
+      "description": "Fullday",
+      "category": "PENAMBAHAN",
+      "points": 2,
+      "supportsMultiplier": false,
+      "roles": [
+        "AO"
+      ],
+      "frequency": "EVENT",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": false
+    },
+    {
+      "id": "r-finger",
+      "description": "Absen Finger",
+      "category": "PENAMBAHAN",
+      "points": 0.5,
+      "supportsMultiplier": false,
+      "roles": [
+        "AO",
+        "TERAPIS",
+        "KASIR"
+      ],
+      "frequency": "DAILY",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": true
+    },
+    {
+      "id": "r-sheet-021",
+      "description": "Stok Outlet aman 1 bulan",
+      "category": "PRESTASI",
+      "points": 1.5,
+      "supportsMultiplier": false,
+      "roles": [
+        "AO"
+      ],
+      "frequency": "MONTHLY",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": false
+    },
+    {
+      "id": "r-sheet-022",
+      "description": "Outlet wangih & bersih 1 bulan",
+      "category": "PRESTASI",
+      "points": 1.5,
+      "supportsMultiplier": false,
+      "roles": [
+        "AO"
+      ],
+      "frequency": "MONTHLY",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": false
+    },
+    {
+      "id": "r-month-report",
+      "description": "Laporan bulanan & kondisi status inventory",
+      "category": "PRESTASI",
+      "points": 1.5,
+      "supportsMultiplier": false,
+      "roles": [
+        "AO"
+      ],
+      "frequency": "MONTHLY",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": false
+    },
+    {
+      "id": "r-sheet-023",
+      "description": "Lembur",
+      "category": "PRESTASI",
+      "points": 1.5,
+      "supportsMultiplier": false,
+      "roles": [
+        "AO"
+      ],
+      "frequency": "DAILY",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": false
+    },
+    {
+      "id": "r-no-sp",
+      "description": "1 bulan tidak dapat SP",
+      "category": "PRESTASI",
+      "points": 5,
+      "supportsMultiplier": false,
+      "roles": [
+        "AO",
+        "KASIR",
+        "TERAPIS"
+      ],
+      "frequency": "MONTHLY",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": false,
+      "automation": {
+        "type": "NO_OCCURRENCE",
+        "period": "MONTHLY",
+        "blockerRuleIds": [
+          "r-sp1",
+          "r-sp2",
+          "r-sp3"
+        ],
+        "requiredDailyRuleId": "",
+        "blockOnDayOff": false
+      }
+    },
+    {
+      "id": "r-sheet-024",
+      "description": "Hadir dalam 30 hari",
+      "category": "PRESTASI",
+      "points": 5,
+      "supportsMultiplier": false,
+      "roles": [
+        "AO",
+        "KASIR",
+        "TERAPIS"
+      ],
+      "frequency": "MONTHLY",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": false
+    },
+    {
+      "id": "r-sheet-025",
+      "description": "Tidak buat berita acara",
+      "category": "PENGURANGAN",
+      "points": -5,
+      "supportsMultiplier": false,
+      "roles": [
+        "KASIR"
+      ],
+      "frequency": "DAILY",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": false
+    },
+    {
+      "id": "r-sheet-026",
+      "description": "Tidak input berita acara harian",
+      "category": "PENGURANGAN",
+      "points": -5,
+      "supportsMultiplier": false,
+      "roles": [
+        "KASIR"
+      ],
+      "frequency": "DAILY",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": false
+    },
+    {
+      "id": "r-sheet-027",
+      "description": "Laporan harian tidak tertib dan benar",
+      "category": "PENGURANGAN",
+      "points": -0.5,
+      "supportsMultiplier": false,
+      "roles": [
+        "KASIR"
+      ],
+      "frequency": "DAILY",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": false
+    },
+    {
+      "id": "r-sheet-028",
+      "description": "List reservasi digrup tidak tepat waktu dan lengkap",
+      "category": "PENGURANGAN",
+      "points": -0.5,
+      "supportsMultiplier": false,
+      "roles": [
+        "KASIR"
+      ],
+      "frequency": "DAILY",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": false
+    },
+    {
+      "id": "r-sheet-029",
+      "description": "Reservasi tamu salah",
+      "category": "PENGURANGAN",
+      "points": -0.5,
+      "supportsMultiplier": false,
+      "roles": [
+        "KASIR"
+      ],
+      "frequency": "EVENT",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": false
+    },
+    {
+      "id": "r-sheet-030",
+      "description": "OFF Kasir",
+      "category": "PENGURANGAN",
+      "points": -2.7,
+      "supportsMultiplier": false,
+      "roles": [
+        "KASIR"
+      ],
+      "frequency": "DAILY",
+      "active": false,
+      "isMultipliable": false,
+      "status": "INACTIVE",
+      "autoDaily": false
+    },
+    {
+      "id": "r-piket",
+      "description": "Piket",
+      "category": "PENAMBAHAN",
+      "points": 0.5,
+      "supportsMultiplier": false,
+      "roles": [
+        "KASIR",
+        "TERAPIS"
+      ],
+      "frequency": "DAILY",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": true
+    },
+    {
+      "id": "r-helpao",
+      "description": "Bantu AO",
+      "category": "PENAMBAHAN",
+      "points": 3.3,
+      "supportsMultiplier": false,
+      "roles": [
+        "KASIR",
+        "TERAPIS"
+      ],
+      "frequency": "EVENT",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": false
+    },
+    {
+      "id": "r-sheet-031",
+      "description": "Berita acara harian",
+      "category": "PENAMBAHAN",
+      "points": 0.3,
+      "supportsMultiplier": false,
+      "roles": [
+        "KASIR"
+      ],
+      "frequency": "DAILY",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": true
+    },
+    {
+      "id": "r-sheet-032",
+      "description": "Laporan harian tertib & benar",
+      "category": "PENAMBAHAN",
+      "points": 0.1,
+      "supportsMultiplier": false,
+      "roles": [
+        "KASIR"
+      ],
+      "frequency": "DAILY",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": true
+    },
+    {
+      "id": "r-sheet-033",
+      "description": "List reservasi digrup tepat waktu lengkap perhari",
+      "category": "PENAMBAHAN",
+      "points": 0.1,
+      "supportsMultiplier": false,
+      "roles": [
+        "KASIR"
+      ],
+      "frequency": "DAILY",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": true
+    },
+    {
+      "id": "r-sheet-034",
+      "description": "Diagnosa & vote lengkap sehari",
+      "category": "PENAMBAHAN",
+      "points": 0.1,
+      "supportsMultiplier": false,
+      "roles": [
+        "KASIR"
+      ],
+      "frequency": "EVENT",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": true
+    },
+    {
+      "id": "r-sheet-035",
+      "description": "Reservasi tamu aman semua tanpa eror dalam sehari",
+      "category": "PENAMBAHAN",
+      "points": 0.1,
+      "supportsMultiplier": false,
+      "roles": [
+        "KASIR"
+      ],
+      "frequency": "EVENT",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": true
+    },
+    {
+      "id": "r-sheet-036",
+      "description": "Tidak lambat dalam 1 bulan",
+      "category": "PRESTASI",
+      "points": 5,
+      "supportsMultiplier": false,
+      "roles": [
+        "KASIR"
+      ],
+      "frequency": "MONTHLY",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": false
+    },
+    {
+      "id": "r-sheet-037",
+      "description": "Tidak Bantu AO",
+      "category": "PENGURANGAN",
+      "points": -3,
+      "supportsMultiplier": false,
+      "roles": [
+        "TERAPIS"
+      ],
+      "frequency": "EVENT",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": false
+    },
+    {
+      "id": "r-refuse",
+      "description": "Menolak tamu",
+      "category": "PENGURANGAN",
+      "points": -10,
+      "supportsMultiplier": false,
+      "roles": [
+        "TERAPIS"
+      ],
+      "frequency": "EVENT",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": false
+    },
+    {
+      "id": "r-sheet-038",
+      "description": "OFF Terapis",
+      "category": "PENGURANGAN",
+      "points": -2,
+      "supportsMultiplier": false,
+      "roles": [
+        "TERAPIS"
+      ],
+      "frequency": "DAILY",
+      "active": false,
+      "isMultipliable": false,
+      "status": "INACTIVE",
+      "autoDaily": false
+    },
+    {
+      "id": "r-report",
+      "description": "Kirim laporan tamunya perhari ke SPV",
+      "category": "PENAMBAHAN",
+      "points": 0.5,
+      "supportsMultiplier": false,
+      "roles": [
+        "TERAPIS"
+      ],
+      "frequency": "DAILY",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": false
+    },
+    {
+      "id": "r-male-guest",
+      "description": "Pegang tamu perbulan diatas 45-50",
+      "category": "PRESTASI",
+      "points": 5,
+      "supportsMultiplier": false,
+      "roles": [
+        "TERAPIS"
+      ],
+      "frequency": "EVENT",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": false,
+      "derivedType": "MONTHLY_GUEST_45"
+    },
+    {
+      "id": "r-female-guest",
+      "description": "Pegang tamu perbulan diatas 50-60",
+      "category": "PRESTASI",
+      "points": 6.5,
+      "supportsMultiplier": false,
+      "roles": [
+        "TERAPIS"
+      ],
+      "frequency": "EVENT",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": false,
+      "derivedType": "MONTHLY_GUEST_50"
+    },
+    {
+      "id": "r-overtime",
+      "description": "Tamu lembur",
+      "category": "PRESTASI",
+      "points": 0.5,
+      "supportsMultiplier": true,
+      "roles": [
+        "TERAPIS"
+      ],
+      "frequency": "EVENT",
+      "active": true,
+      "isMultipliable": true,
+      "status": "ACTIVE",
+      "autoDaily": false
+    },
+    {
+      "id": "r-sheet-039",
+      "description": "2 tamu seharian",
+      "category": "PRESTASI",
+      "points": 1,
+      "supportsMultiplier": false,
+      "roles": [
+        "TERAPIS"
+      ],
+      "frequency": "EVENT",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": false
+    },
+    {
+      "id": "r-sheet-040",
+      "description": "3 tamu seharian",
+      "category": "PRESTASI",
+      "points": 1.5,
+      "supportsMultiplier": false,
+      "roles": [
+        "TERAPIS"
+      ],
+      "frequency": "EVENT",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": false
+    },
+    {
+      "id": "r-sheet-041",
+      "description": "4 tamu seharian",
+      "category": "PRESTASI",
+      "points": 2,
+      "supportsMultiplier": false,
+      "roles": [
+        "TERAPIS"
+      ],
+      "frequency": "EVENT",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": false
+    },
+    {
+      "id": "r-sheet-042",
+      "description": "5 tamu seharian",
+      "category": "PRESTASI",
+      "points": 2.5,
+      "supportsMultiplier": false,
+      "roles": [
+        "TERAPIS"
+      ],
+      "frequency": "EVENT",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": false
+    },
+    {
+      "id": "r-sheet-043",
+      "description": "Request Tamu",
+      "category": "PRESTASI",
+      "points": 1.5,
+      "supportsMultiplier": false,
+      "roles": [
+        "TERAPIS"
+      ],
+      "frequency": "EVENT",
+      "active": true,
+      "isMultipliable": false,
+      "status": "ACTIVE",
+      "autoDaily": false
+    }
+  ],
+  "entries": [
+    {
+      "id": "e1",
+      "date": "2026-09-01",
+      "employeeId": "emp-syarif",
+      "ruleId": "r-report",
+      "multiplier": 1,
+      "basePoints": 0.5,
+      "totalPoints": 0.5,
+      "notes": "",
+      "status": "CONFIRMED",
+      "createdAt": "2026-09-01T01:00:00Z",
+      "updatedAt": "2026-09-01T01:00:00Z"
+    },
+    {
+      "id": "e2",
+      "date": "2026-09-01",
+      "employeeId": "emp-malik",
+      "ruleId": "r-report",
+      "multiplier": 1,
+      "basePoints": 0.5,
+      "totalPoints": 0.5,
+      "notes": "",
+      "status": "CONFIRMED",
+      "createdAt": "2026-09-01T01:03:00Z",
+      "updatedAt": "2026-09-01T01:03:00Z"
+    },
+    {
+      "id": "e3",
+      "date": "2026-09-01",
+      "employeeId": "emp-aulia",
+      "ruleId": "r-double",
+      "multiplier": 3,
+      "basePoints": 3.3,
+      "totalPoints": 9.9,
+      "notes": "",
+      "status": "CONFIRMED",
+      "createdAt": "2026-09-01T01:06:00Z",
+      "updatedAt": "2026-09-01T01:06:00Z"
+    },
+    {
+      "id": "e4",
+      "date": "2026-09-01",
+      "employeeId": "emp-adi",
+      "ruleId": "r-double",
+      "multiplier": 2,
+      "basePoints": 3.3,
+      "totalPoints": 6.6,
+      "notes": "",
+      "status": "CONFIRMED",
+      "createdAt": "2026-09-01T01:09:00Z",
+      "updatedAt": "2026-09-01T01:09:00Z"
+    },
+    {
+      "id": "e5",
+      "date": "2026-09-01",
+      "employeeId": "emp-ahmad",
+      "ruleId": "r-double",
+      "multiplier": 2,
+      "basePoints": 3.3,
+      "totalPoints": 6.6,
+      "notes": "",
+      "status": "CONFIRMED",
+      "createdAt": "2026-09-01T01:12:00Z",
+      "updatedAt": "2026-09-01T01:12:00Z"
+    },
+    {
+      "id": "e6",
+      "date": "2026-09-01",
+      "employeeId": "emp-azmi",
+      "ruleId": "r-double",
+      "multiplier": 3,
+      "basePoints": 3.3,
+      "totalPoints": 9.9,
+      "notes": "",
+      "status": "CONFIRMED",
+      "createdAt": "2026-09-01T01:15:00Z",
+      "updatedAt": "2026-09-01T01:15:00Z"
+    },
+    {
+      "id": "e7",
+      "date": "2026-09-01",
+      "employeeId": "emp-widya",
+      "ruleId": "r-double",
+      "multiplier": 2,
+      "basePoints": 3.3,
+      "totalPoints": 6.6,
+      "notes": "",
+      "status": "CONFIRMED",
+      "createdAt": "2026-09-01T01:18:00Z",
+      "updatedAt": "2026-09-01T01:18:00Z"
+    },
+    {
+      "id": "e8",
+      "date": "2026-09-01",
+      "employeeId": "emp-ikbal",
+      "ruleId": "r-double",
+      "multiplier": 3,
+      "basePoints": 3.3,
+      "totalPoints": 9.9,
+      "notes": "",
+      "status": "CONFIRMED",
+      "createdAt": "2026-09-01T01:21:00Z",
+      "updatedAt": "2026-09-01T01:21:00Z"
+    },
+    {
+      "id": "e9",
+      "date": "2026-09-01",
+      "employeeId": "emp-nurul",
+      "ruleId": "r-double",
+      "multiplier": 2,
+      "basePoints": 3.3,
+      "totalPoints": 6.6,
+      "notes": "",
+      "status": "CONFIRMED",
+      "createdAt": "2026-09-01T01:24:00Z",
+      "updatedAt": "2026-09-01T01:24:00Z"
+    },
+    {
+      "id": "e10",
+      "date": "2026-09-01",
+      "employeeId": "emp-rafly",
+      "ruleId": "r-helpao",
+      "multiplier": 1,
+      "basePoints": 3.3,
+      "totalPoints": 3.3,
+      "notes": "",
+      "status": "CONFIRMED",
+      "createdAt": "2026-09-01T01:27:00Z",
+      "updatedAt": "2026-09-01T01:27:00Z"
+    },
+    {
+      "id": "e11",
+      "date": "2026-09-01",
+      "employeeId": "emp-widya",
+      "ruleId": "r-helpao",
+      "multiplier": 1,
+      "basePoints": 3.3,
+      "totalPoints": 3.3,
+      "notes": "",
+      "status": "CONFIRMED",
+      "createdAt": "2026-09-01T01:30:00Z",
+      "updatedAt": "2026-09-01T01:30:00Z"
+    },
+    {
+      "id": "e12",
+      "date": "2026-09-01",
+      "employeeId": "emp-mei",
+      "ruleId": "r-month-report",
+      "multiplier": 1,
+      "basePoints": 1.5,
+      "totalPoints": 1.5,
+      "notes": "",
+      "status": "CONFIRMED",
+      "createdAt": "2026-09-01T01:33:00Z",
+      "updatedAt": "2026-09-01T01:33:00Z"
+    },
+    {
+      "id": "e13",
+      "date": "2026-09-01",
+      "employeeId": "emp-adi",
+      "ruleId": "r-month-report",
+      "multiplier": 1,
+      "basePoints": 1.5,
+      "totalPoints": 1.5,
+      "notes": "",
+      "status": "CONFIRMED",
+      "createdAt": "2026-09-01T01:36:00Z",
+      "updatedAt": "2026-09-01T01:36:00Z"
+    },
+    {
+      "id": "e14",
+      "date": "2026-09-01",
+      "employeeId": "emp-novi",
+      "ruleId": "r-month-report",
+      "multiplier": 1,
+      "basePoints": 1.5,
+      "totalPoints": 1.5,
+      "notes": "",
+      "status": "CONFIRMED",
+      "createdAt": "2026-09-01T01:39:00Z",
+      "updatedAt": "2026-09-01T01:39:00Z"
+    },
+    {
+      "id": "e15",
+      "date": "2026-09-01",
+      "employeeId": "emp-miftah",
+      "ruleId": "r-helpao",
+      "multiplier": 1,
+      "basePoints": 3.3,
+      "totalPoints": 3.3,
+      "notes": "",
+      "status": "CONFIRMED",
+      "createdAt": "2026-09-01T01:42:00Z",
+      "updatedAt": "2026-09-01T01:42:00Z"
+    },
+    {
+      "id": "e16",
+      "date": "2026-08-22",
+      "employeeId": "emp-rafly",
+      "ruleId": "r-late15",
+      "multiplier": 1,
+      "basePoints": -5,
+      "totalPoints": -5,
+      "notes": "",
+      "status": "CONFIRMED",
+      "createdAt": "2026-08-22T01:42:00Z",
+      "updatedAt": "2026-08-22T01:42:00Z"
+    },
+    {
+      "id": "e17",
+      "date": "2026-08-02",
+      "employeeId": "emp-rafly",
+      "ruleId": "r-piket",
+      "multiplier": 1,
+      "basePoints": 0.5,
+      "totalPoints": 0.5,
+      "notes": "",
+      "status": "CONFIRMED",
+      "createdAt": "2026-08-02T01:42:00Z",
+      "updatedAt": "2026-08-02T01:42:00Z"
+    },
+    {
+      "id": "e18",
+      "date": "2026-08-03",
+      "employeeId": "emp-rafly",
+      "ruleId": "r-helpao",
+      "multiplier": 1,
+      "basePoints": 3.3,
+      "totalPoints": 3.3,
+      "notes": "",
+      "status": "CONFIRMED",
+      "createdAt": "2026-08-03T01:42:00Z",
+      "updatedAt": "2026-08-03T01:42:00Z"
+    }
+  ],
+  "audit": [],
+  "meta": {
+    "automaticPointsEnabledAt": "2026-09-03T07:21:01.407Z",
+    "automaticPointTimezone": "Asia/Makassar"
+  }
+}
