@@ -5,7 +5,7 @@ const state = {
   outlet: 'SEMUA', month: '2026-09', recapYear: '2026', recapPosition: 'SEMUA', search: '', pointCategory: 'SEMUA',
   selectedEmployee: 'emp-rafly', editingId: null, selectedPointCard: null,
   cardSelections: {}, rotationDraft: {}, sidebarCollapsed: localStorage.getItem('sidebarCollapsed')==='true',
-  tourActive: localStorage.getItem('walkthroughSeen-v1')!=='true', tourStep: 0, tourRestoreCollapsed: false,
+  tourActive: false, tourStep: 0, tourRestoreCollapsed: false,
   employeeFilters: { position:'SEMUA', gender:'SEMUA', city:'SEMUA', status:'SEMUA', outlet:'SEMUA' }
 };
 const pendingPointSaves = new Set();
@@ -57,7 +57,7 @@ function navButton(page, label, iconName, badge='') {
 function shell(content) {
   return `<div class="app-shell ${state.sidebarCollapsed?'sidebar-collapsed':''}">
     <aside class="sidebar" id="sidebar" data-tour="sidebar">
-      <div class="brand"><span class="brand-logo-frame"><img src="/assets/breaktime-logo.png" alt="Breaktime" width="480" height="320" decoding="async"></span></div>
+      <div class="brand"><span class="brand-logo-frame"><picture><source type="image/avif" srcset="/assets/breaktime-logo-150.avif 150w, /assets/breaktime-logo-300.avif 300w" sizes="150px"><img src="/assets/breaktime-logo-150.webp" srcset="/assets/breaktime-logo-150.webp 150w, /assets/breaktime-logo-300.webp 300w" sizes="150px" alt="Breaktime" width="150" height="100" decoding="async"></picture></span></div>
       <button class="sidebar-collapse" id="sidebar-collapse" title="Tutup atau kecilkan navigasi" aria-label="Tutup atau kecilkan navigasi">${icon('chevron')}</button>
       <div class="nav-label">Utama</div>
       ${navButton('dashboard','Dashboard','dashboard')}
@@ -66,7 +66,7 @@ function shell(content) {
       ${navButton('activity','Riwayat Aktivitas','list',activeEntries().length)}
       ${state.role==='ADMIN'?`<div class="nav-label">Kelola</div>${navButton('entry','Input Poin','plus')}${navButton('employees','Karyawan','users')}${navButton('outlets','Rotasi Outlet','building')}${navButton('rules','Point Master','settings')}`:`<div class="nav-label">Ringkasan</div>${navButton('outlets','Ringkasan Outlet','building')}`}
       <div class="sidebar-bottom">
-        <div class="profile-mini"><img class="profile-avatar" src="/assets/${state.role==='ADMIN'?'admin-avatar.png':'viewer-avatar.png'}" alt="Avatar ${state.role==='ADMIN'?'Administrator':'Viewer'}"><div><strong>${state.role==='ADMIN'?'Administrator':'Viewer'}</strong><span>${state.role==='ADMIN'?'Editor akses penuh':'Akses hanya lihat'}</span></div></div>
+        <div class="profile-mini"><img class="profile-avatar" src="/assets/${state.role==='ADMIN'?'admin':'viewer'}-avatar-48.webp" srcset="/assets/${state.role==='ADMIN'?'admin':'viewer'}-avatar-48.webp 48w, /assets/${state.role==='ADMIN'?'admin':'viewer'}-avatar-96.webp 96w" sizes="40px" width="48" height="48" loading="lazy" decoding="async" alt="Avatar ${state.role==='ADMIN'?'Administrator':'Viewer'}"><div><strong>${state.role==='ADMIN'?'Administrator':'Viewer'}</strong><span>${state.role==='ADMIN'?'Editor akses penuh':'Akses hanya lihat'}</span></div></div>
       </div>
     </aside>
     <button class="sidebar-backdrop" id="sidebar-backdrop" aria-label="Tutup menu navigasi"></button>
