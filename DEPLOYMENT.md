@@ -8,9 +8,9 @@ Pastikan proyek tersimpan di GitHub dan file `.env` tidak ikut di-commit. File `
 
 1. Buka https://vercel.com/new.
 2. Pilih **Import Git Repository**, lalu pilih repositori Poin Breaktime.
-3. Gunakan **Framework Preset: Other**.
+3. Gunakan **Framework Preset: Next.js**. Biasanya Vercel mendeteksinya otomatis.
 4. Biarkan **Root Directory** pada akar repositori.
-5. Konfigurasi build dan routing akan dibaca dari `vercel.json`.
+5. Build Command memakai `pnpm build` dan Output Directory dibiarkan mengikuti standar Next.js.
 
 ## 3. Tambahkan Environment Variables
 

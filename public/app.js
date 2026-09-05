@@ -5,6 +5,7 @@ const state = {
   outlet: 'SEMUA', month: '2026-09', recapYear: '2026', recapPosition: 'SEMUA', search: '', pointCategory: 'SEMUA',
   selectedEmployee: 'emp-rafly', editingId: null, selectedPointCard: null,
   cardSelections: {}, rotationDraft: {}, sidebarCollapsed: localStorage.getItem('sidebarCollapsed')==='true',
+  pinnedRuleIds: (()=>{try{return JSON.parse(localStorage.getItem('pinnedRuleIds')||'[]')}catch{return[]}})(),
   tourActive: false, tourStep: 0, tourRestoreCollapsed: false,
   employeeFilters: { position:'SEMUA', gender:'SEMUA', city:'SEMUA', status:'SEMUA', outlet:'SEMUA' }
 };
@@ -24,7 +25,7 @@ const icons = {
   calendar: '<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',
   building: '<path d="M3 21h18M6 21V4h12v17M9 8h2M13 8h2M9 12h2M13 12h2M9 16h6"/>',
   settings: '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-2.83 2.83-.06-.06A1.7 1.7 0 0 0 15 19.4a1.7 1.7 0 0 0-1 .6 1.7 1.7 0 0 0-.4 1.1V21h-4v-.09A1.7 1.7 0 0 0 8.6 19.4a1.7 1.7 0 0 0-1.88.34l-.06.06-2.83-2.83.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-.6-1 1.7 1.7 0 0 0-1.1-.4H3v-4h.09A1.7 1.7 0 0 0 4.6 8.6a1.7 1.7 0 0 0-.34-1.88l-.06-.06 2.83-2.83.06.06A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-.6 1.7 1.7 0 0 0 .4-1.1V3h4v.09A1.7 1.7 0 0 0 15.4 4.6a1.7 1.7 0 0 0 1.88-.34l.06-.06 2.83 2.83-.06.06A1.7 1.7 0 0 0 19.4 9c.38.3.6.75.6 1.23v.17h1v4h-.09A1.7 1.7 0 0 0 19.4 15z"/>',
-  chevron: '<path d="m9 18 6-6-6-6"/>', empty: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5M12 15V3"/>'
+  chevron: '<path d="m9 18 6-6-6-6"/>', pin: '<path d="M12 17v5M5 3l14 14M15 4l5 5-4 1-3 3-1.5 4.5-5-5L11 11l3-3z"/>', empty: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5M12 15V3"/>'
 };
 const icon = (name) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${icons[name]}</svg>`;
 const fmt = n => new Intl.NumberFormat('id-ID', { maximumFractionDigits: 1 }).format(Number(n || 0));
@@ -181,7 +182,7 @@ function scorecardPage() {
 
 function entryPage() {
   if (state.role !== 'ADMIN') return shell(`${pageHead('Input Poin','Form ini hanya tersedia untuk Admin.')}<div class="viewer-note">${icon('lock')} Akses ditolak. Ubah peran ke Admin untuk membuat atau mengubah data.</div>${empty('Mode hanya lihat','Viewer tidak memiliki izin untuk mengelola poin.')}`);
-  const rules=state.rules.filter(r=>r.status==='ACTIVE'&&(state.pointCategory==='SEMUA'||r.category===state.pointCategory)&&(!state.search||r.description.toLowerCase().includes(state.search.toLowerCase())));
+  const rules=state.rules.filter(r=>r.status==='ACTIVE'&&(state.pointCategory==='SEMUA'||r.category===state.pointCategory)&&(!state.search||r.description.toLowerCase().includes(state.search.toLowerCase()))).sort((a,b)=>Number(state.pinnedRuleIds.includes(b.id))-Number(state.pinnedRuleIds.includes(a.id))||a.description.localeCompare(b.description,'id'));
   const tabs=['SEMUA','PENGURANGAN','PENAMBAHAN','PRESTASI'];
   const date=state.entryDate||new Date().toISOString().slice(0,10),offToday=state.daysOff.filter(item=>item.date===date);
   return shell(`${pageHead('Input Poin Harian','Pilih kartu aktivitas, lalu tentukan satu atau beberapa karyawan.',`<button class="button" data-page="activity">Riwayat</button>`)}
@@ -194,11 +195,11 @@ function pointEntryCard(rule,index){
   const colors={PENGURANGAN:'#ffd8dc',PENAMBAHAN:'#d4ecff',PRESTASI:'#ffe9bd'},selected=state.cardSelections[rule.id]||{};
   const eligible=state.employees.filter(e=>e.status==='ACTIVE'&&(!rule.roles.length||rule.roles.includes(e.position)));
   const selectedDate=state.entryDate||new Date().toISOString().slice(0,10),excluded=state.autoExclusions.filter(e=>e.ruleId===rule.id&&e.date===selectedDate);
-  const rows=Object.entries(selected).map(([id,qty])=>{const e=state.employees.find(x=>x.id===id);return e?`<div class="selected-person"><div class="avatar">${initials(e.name)}</div><div><strong>${e.name}</strong><small>${e.position} · ${employeeOutletName(e.id,state.entryDate||new Date().toISOString().slice(0,10))}</small></div>${rule.isMultipliable?`<label>Qty <input type="number" min="1" value="${qty}" data-card-qty="${rule.id}" data-employee="${e.id}"></label>`:''}<span>${rule.points>0?'+':''}${fmt(rule.points*(rule.isMultipliable?qty:1))}</span><button data-card-remove="${rule.id}" data-employee="${e.id}">×</button></div>`:''}).join('');
-  const total=Object.values(selected).reduce((a,q)=>a+rule.points*(rule.isMultipliable?q:1),0);
+  const rows=Object.entries(selected).map(([key,item])=>{const e=state.employees.find(x=>x.id===item.employeeId);return e?`<div class="selected-person"><div class="avatar">${initials(e.name)}</div><div><strong>${e.name}</strong><small>${e.position} · ${employeeOutletName(e.id,item.date)}</small><time>${icon('calendar')} ${dateFmt(item.date)}</time></div>${rule.isMultipliable?`<label>Qty <input type="number" min="1" value="${item.quantity}" data-card-qty="${rule.id}" data-selection="${key}"></label>`:''}<span>${rule.points>0?'+':''}${fmt(rule.points*(rule.isMultipliable?item.quantity:1))}</span><button data-card-remove="${rule.id}" data-selection="${key}" aria-label="Hapus ${e.name} tanggal ${dateFmt(item.date)}">×</button></div>`:''}).join('');
+  const total=Object.values(selected).reduce((a,item)=>a+rule.points*(rule.isMultipliable?item.quantity:1),0),pinned=state.pinnedRuleIds.includes(rule.id);
   const excludedRows=rule.autoDaily&&excluded.length?`<div class="auto-exclusion-list"><small>POIN OTOMATIS DIHAPUS</small>${excluded.map(item=>`<div class="auto-exclusion-row"><span>${item.employee.name}</span><button data-restore-auto="${item.id}">Pulihkan</button></div>`).join('')}</div>`:'';
-  const choices=eligible.filter(e=>!selected[e.id]&&!excluded.some(x=>x.employeeId===e.id));
-  return `<article class="point-entry-card ${rule.autoDaily?'auto-daily-card':''}" style="--card-color:${colors[rule.category]};--delay:${index*20}ms"><div class="point-card-head"><div><span class="pill ${rule.category}">${rule.category}</span><h3>${rule.description}</h3></div><strong>${rule.points>0?'+':''}${fmt(rule.points)}</strong></div><p>${rule.autoDaily?'Poin terisi otomatis. Pilih karyawan untuk menghapus poin pada tanggal tersebut.':rule.isMultipliable?'Nilai dapat dikalikan dengan quantity.':'Multiplier otomatis ditetapkan ke 1.'}</p><div class="point-card-input-row"><div class="employee-search-picker">${icon('search')}<input type="search" list="employee-options-${rule.id}" data-card-employee-search="${rule.id}" placeholder="${rule.autoDaily?'Cari karyawan untuk dihapus…':'Ketik nama karyawan…'}" autocomplete="off"><datalist id="employee-options-${rule.id}">${choices.map(e=>`<option value="${e.name}" label="${e.position} · ${employeeOutletName(e.id)}"></option>`).join('')}</datalist></div><input class="inline-entry-date" data-entry-date type="date" value="${selectedDate}" aria-label="Tanggal poin ${rule.description}"></div><div class="selected-people">${rows}</div>${excludedRows}<div class="point-card-footer"><span>${Object.keys(selected).length} karyawan ${rule.autoDaily?'dipilih':`· <b>${total>0?'+':''}${fmt(total)}</b>`}</span><button class="button" data-save-card="${rule.id}" ${Object.keys(selected).length?'':'disabled'}>${rule.autoDaily?'Hapus poin otomatis':'Simpan poin'}</button></div></article>`;
+  const choices=eligible.filter(e=>rule.isMultipliable||!selected[`${e.id}|${selectedDate}`]).filter(e=>!excluded.some(x=>x.employeeId===e.id));
+  return `<article class="point-entry-card ${rule.autoDaily?'auto-daily-card':''} ${pinned?'pinned-card':''}" style="--card-color:${colors[rule.category]};--delay:${index*20}ms"><div class="point-card-head"><div><span class="pill ${rule.category}">${rule.category}</span><h3>${rule.description}</h3></div><div class="point-card-actions"><button class="pin-button ${pinned?'active':''}" data-pin-rule="${rule.id}" aria-pressed="${pinned}" title="${pinned?'Lepas sematan':'Sematkan poin'}">${icon('pin')}</button><strong>${rule.points>0?'+':''}${fmt(rule.points)}</strong></div></div><p>${rule.autoDaily?'Poin terisi otomatis. Pilih karyawan untuk menghapus poin pada tanggal tersebut.':rule.isMultipliable?'Nama yang sama pada tanggal yang sama akan menambah quantity.':'Multiplier otomatis ditetapkan ke 1.'}</p><div class="point-card-input-row"><div class="employee-search-picker">${icon('search')}<input type="search" list="employee-options-${rule.id}" data-card-employee-search="${rule.id}" placeholder="${rule.autoDaily?'Cari karyawan untuk dihapus…':'Ketik nama karyawan…'}" autocomplete="off"><datalist id="employee-options-${rule.id}">${choices.map(e=>`<option value="${e.name}" label="${e.position} · ${employeeOutletName(e.id,selectedDate)}"></option>`).join('')}</datalist></div><label class="entry-date-field">${icon('calendar')}<span>Tanggal</span><input class="inline-entry-date" data-entry-date type="date" value="${selectedDate}" aria-label="Tanggal poin ${rule.description}"></label></div><div class="selected-people">${rows}</div>${excludedRows}<div class="point-card-footer"><span>${Object.keys(selected).length} data ${rule.autoDaily?'dipilih':`· <b>${total>0?'+':''}${fmt(total)}</b>`}</span><button class="button" data-save-card="${rule.id}" ${Object.keys(selected).length?'':'disabled'}>${rule.autoDaily?'Hapus poin otomatis':'Simpan semua poin'}</button></div></article>`;
 }
 
 function employeesPage(){
@@ -279,8 +280,14 @@ function render(){if(state.tourActive&&!window.matchMedia('(max-width:760px)').m
 function selectCardEmployee(input){
   const ruleId=input.dataset.cardEmployeeSearch,employee=state.employees.find(e=>e.name.toLowerCase()===input.value.trim().toLowerCase());
   if(!employee){input.setCustomValidity('Pilih nama karyawan dari daftar.');input.reportValidity();return;}
-  input.setCustomValidity('');state.cardSelections[ruleId]??={};state.cardSelections[ruleId][employee.id]=1;render();
-  const quantity=document.querySelector(`[data-card-qty="${ruleId}"][data-employee="${employee.id}"]`);
+  const date=state.entryDate||new Date().toISOString().slice(0,10),key=`${employee.id}|${date}`,rule=state.rules.find(item=>item.id===ruleId);
+  if(input.dataset.selectionToken===key)return;
+  input.dataset.selectionToken=key;
+  input.setCustomValidity('');state.cardSelections[ruleId]??={};
+  if(state.cardSelections[ruleId][key]&&rule?.isMultipliable)state.cardSelections[ruleId][key].quantity+=1;
+  else state.cardSelections[ruleId][key]={employeeId:employee.id,date,quantity:1};
+  render();
+  const quantity=document.querySelector(`[data-card-qty="${ruleId}"][data-selection="${key}"]`);
   if(quantity){quantity.focus();quantity.select();quantity.scrollIntoView({behavior:'smooth',block:'center'});}
 }
 
@@ -302,10 +309,11 @@ function bind(){
   document.querySelectorAll('[data-edit]').forEach(b=>b.addEventListener('click',()=>editEntryModal(state.entries.find(e=>e.id===b.dataset.edit))));
   document.querySelectorAll('[data-void]').forEach(btn=>btn.addEventListener('click',()=>confirmVoid(btn.dataset.void)));
   document.querySelectorAll('[data-category]').forEach(b=>b.addEventListener('click',()=>{state.pointCategory=b.dataset.category;render()}));
+  document.querySelectorAll('[data-pin-rule]').forEach(b=>b.addEventListener('click',()=>{const id=b.dataset.pinRule;state.pinnedRuleIds=state.pinnedRuleIds.includes(id)?state.pinnedRuleIds.filter(item=>item!==id):[id,...state.pinnedRuleIds];localStorage.setItem('pinnedRuleIds',JSON.stringify(state.pinnedRuleIds));render()}));
   document.querySelectorAll('[data-entry-date]').forEach(input=>input.addEventListener('change',e=>{const scrollY=window.scrollY;state.entryDate=e.target.value;render();requestAnimationFrame(()=>window.scrollTo({top:scrollY,behavior:'instant'}));}));
-  document.querySelectorAll('[data-card-employee-search]').forEach(input=>{input.addEventListener('change',()=>selectCardEmployee(input));input.addEventListener('keydown',event=>{if(event.key==='Enter'){event.preventDefault();selectCardEmployee(input);}})});
-  document.querySelectorAll('[data-card-remove]').forEach(b=>b.addEventListener('click',()=>{delete state.cardSelections[b.dataset.cardRemove][b.dataset.employee];render()}));
-  document.querySelectorAll('[data-card-qty]').forEach(i=>i.addEventListener('change',()=>{state.cardSelections[i.dataset.cardQty][i.dataset.employee]=Math.max(1,Number(i.value||1));render()}));
+  document.querySelectorAll('[data-card-employee-search]').forEach(input=>{input.addEventListener('change',()=>setTimeout(()=>selectCardEmployee(input),0));input.addEventListener('keydown',event=>{if(event.key==='Enter'){event.preventDefault();selectCardEmployee(input);}})});
+  document.querySelectorAll('[data-card-remove]').forEach(b=>b.addEventListener('click',()=>{delete state.cardSelections[b.dataset.cardRemove][b.dataset.selection];render()}));
+  document.querySelectorAll('[data-card-qty]').forEach(i=>i.addEventListener('change',()=>{state.cardSelections[i.dataset.cardQty][i.dataset.selection].quantity=Math.max(1,Number(i.value||1));render()}));
   document.querySelectorAll('[data-save-card]').forEach(b=>b.addEventListener('click',()=>savePointCard(b.dataset.saveCard)));
   document.querySelectorAll('[data-restore-auto]').forEach(b=>b.addEventListener('click',()=>restoreAutomaticPoint(b.dataset.restoreAuto)));
   document.querySelector('#save-day-off')?.addEventListener('click',saveDayOff);document.querySelectorAll('[data-restore-off]').forEach(b=>b.addEventListener('click',()=>restoreDayOff(b.dataset.restoreOff)));
@@ -319,32 +327,36 @@ function bind(){
 function adjustAnnualScore(employeeId,date,delta){if(!date.startsWith(`${state.recapYear}-`)||!delta)return;const month=date.slice(0,7),score=state.annualScores.find(item=>item.employeeId===employeeId&&item.month===month);if(score)score.total=Number(score.total||0)+Number(delta);else state.annualScores.push({employeeId,month,total:Number(delta)});}
 async function savePointCard(ruleId){
   if(pendingPointSaves.has(ruleId))return;
-  const selected=state.cardSelections[ruleId]||{},items=Object.entries(selected).map(([employeeId,quantity])=>({employeeId,quantity}));
+  const selected=state.cardSelections[ruleId]||{},items=Object.values(selected);
   if(!items.length)return;
-  const date=state.entryDate||new Date().toISOString().slice(0,10),button=document.querySelector(`[data-save-card="${ruleId}"]`),originalLabel=button?.textContent;
+  const button=document.querySelector(`[data-save-card="${ruleId}"]`),originalLabel=button?.textContent,groups=items.reduce((map,item)=>{(map[item.date]??=[]).push(item);return map},{}),results=[];
   pendingPointSaves.add(ruleId);
   if(button){button.disabled=true;button.setAttribute('aria-busy','true');button.textContent='Menyimpan…';}
   try{
-    const result=await api('/api/entry-batches',{method:'POST',body:JSON.stringify({date,ruleId,items})});
-    delete state.cardSelections[ruleId];
-    if(result.action==='REMOVED'){
+    for(const [date,dateItems] of Object.entries(groups)){
+      results.push(await api('/api/entry-batches',{method:'POST',body:JSON.stringify({date,ruleId,items:dateItems.map(({employeeId,quantity})=>({employeeId,quantity}))})}));
+      for(const [key,item] of Object.entries(state.cardSelections[ruleId]))if(item.date===date)delete state.cardSelections[ruleId][key];
+    }
+    if(!Object.keys(state.cardSelections[ruleId]).length)delete state.cardSelections[ruleId];
+    for(const result of results)if(result.action==='REMOVED'){
       for(const exclusion of result.entries){const removed=state.entries.filter(entry=>entry.employeeId===exclusion.employeeId&&entry.ruleId===exclusion.ruleId&&entry.date===exclusion.date&&entry.entryKind==='AUTO');removed.forEach(entry=>adjustAnnualScore(entry.employeeId,entry.date,-entry.totalPoints));state.entries=state.entries.filter(entry=>!removed.includes(entry));state.autoExclusions.unshift(exclusion);}
-    }else if(result.action==='ADDED'){
-      for(const entry of result.entries){if(entry.date.startsWith(state.month))state.entries.unshift(entry);adjustAnnualScore(entry.employeeId,entry.date,entry.totalPoints);}
-    }else{
+    }else if(result.action==='ADDED')for(const entry of result.entries){if(entry.date.startsWith(state.month))state.entries.unshift(entry);adjustAnnualScore(entry.employeeId,entry.date,entry.totalPoints);}
+    if(results.some(result=>result.action==='CANCELLED')){
       await load();
     }
     render();
-    toast(result.action==='REMOVED'?`${result.entries.length} poin otomatis berhasil dihapus.`:result.action==='CANCELLED'?'Poin target berhasil dibatalkan.':`${result.entries.length} poin berhasil dicatat.`);
+    const savedCount=results.reduce((sum,result)=>sum+result.entries.length,0),action=results[0]?.action;
+    toast(action==='REMOVED'?`${savedCount} poin otomatis berhasil dihapus.`:action==='CANCELLED'?'Poin target berhasil dibatalkan.':`${savedCount} poin berhasil dicatat.`);
   }catch(error){
     if(button){button.disabled=false;button.removeAttribute('aria-busy');button.textContent=originalLabel;}
+    render();
     toast(error.message,'error');
   }finally{
     pendingPointSaves.delete(ruleId);
   }
 }
 async function restoreAutomaticPoint(id){try{await api(`/api/entries/${id}`,{method:'DELETE'});await load();render();toast('Poin otomatis berhasil dipulihkan.');}catch(error){toast(error.message,'error')}}
-async function saveDayOff(){const input=document.querySelector('#day-off-search'),employee=state.employees.find(e=>e.name.toLowerCase()===input.value.trim().toLowerCase());if(!employee){input.setCustomValidity('Pilih nama karyawan dari daftar.');input.reportValidity();return;}try{await api('/api/days-off',{method:'POST',body:JSON.stringify({employeeId:employee.id,date:state.entryDate||new Date().toISOString().slice(0,10)})});await load();render();toast(`${employee.name} ditandai OFF.`);}catch(error){toast(error.message,'error')}}
+async function saveDayOff(){const input=document.querySelector('#day-off-search'),employee=state.employees.find(e=>e.name.toLowerCase()===input.value.trim().toLowerCase());if(!employee){input.setCustomValidity('Pilih nama karyawan dari daftar.');input.reportValidity();return;}const date=state.entryDate||new Date().toISOString().slice(0,10),button=document.querySelector('#save-day-off');if(button){button.disabled=true;button.textContent='Menyimpan…';}try{const item=await api('/api/days-off',{method:'POST',body:JSON.stringify({employeeId:employee.id,date})});state.daysOff.unshift({...item,employee});const removed=state.entries.filter(entry=>entry.employeeId===employee.id&&entry.date===date&&entry.entryKind==='AUTO');removed.forEach(entry=>adjustAnnualScore(entry.employeeId,entry.date,-entry.totalPoints));state.entries=state.entries.filter(entry=>!removed.includes(entry));render();toast(`${employee.name} ditandai OFF.`);}catch(error){if(button){button.disabled=false;button.textContent='Tandai OFF';}toast(error.message,'error')}}
 async function restoreDayOff(id){try{await api(`/api/days-off/${id}`,{method:'DELETE'});await load();render();toast('Status OFF dibatalkan dan poin otomatis dipulihkan.');}catch(error){toast(error.message,'error')}}
 
 async function saveRotation(){try{await api('/api/assignments',{method:'POST',body:JSON.stringify({month:state.rotationMonth||state.month,assignments:Object.entries(state.rotationDraft).map(([employeeId,value])=>({employeeId,outletId:value.outletId,captainGroup:value.captainGroup}))})});state.rotationDraft={};await load();render();toast('Rotasi outlet dan grup kapten berhasil disimpan.');}catch(error){toast(error.message,'error')}}
