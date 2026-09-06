@@ -1,7 +1,7 @@
 const state = {
   role: 'VIEWER', adminToken: null,
   page: 'dashboard',
-  employees: [], outlets: [], assignments: [], rules: [], entries: [], annualScores: [], availableYears: [], autoExclusions: [], daysOff: [], audit: [],
+  employees: [], outlets: [], assignments: [], rules: [], entries: [], annualScores: [], annualLoadedYear: null, annualLoading: false, availableYears: [], autoExclusions: [], daysOff: [], audit: [],
   outlet: 'SEMUA', month: '2026-09', recapYear: '2026', recapPosition: 'SEMUA', search: '', pointCategory: 'SEMUA',
   selectedEmployee: 'emp-rafly', editingId: null, selectedPointCard: null,
   cardSelections: {}, rotationDraft: {}, sidebarCollapsed: localStorage.getItem('sidebarCollapsed')==='true',
@@ -124,6 +124,7 @@ function recapPage() {
   const monthNames=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agt','Sep','Okt','Nov','Des'];
   const years=state.availableYears;
   if(!years.includes(state.recapYear)) state.recapYear=years[0]||state.month.slice(0,4);
+  if(state.annualLoadedYear!==state.recapYear)return shell(`${pageHead('Rekapan Poin','Rekap bulanan, total semester, dan peringkat karyawan per kota.')}<div class="app-loading inline-loading"><strong>${state.annualLoading?'Memuat rekapan tahunan…':'Menyiapkan rekapan…'}</strong><span>Data tahunan hanya dimuat saat diperlukan.</span></div>`);
   const citySections=['Palu','Makassar'].map(city=>{
     const employees=state.employees.filter(employee=>employee.status==='ACTIVE'&&employee.position!=='KAPTEN'&&employee.city===city&&matchesSearch(employee.name,employee.position,city));
     const rows=employees.map(employee=>{
@@ -293,7 +294,7 @@ function selectCardEmployee(input){
 
 function bind(){
   document.querySelector('#open-walkthrough')?.addEventListener('click',()=>{state.tourStep=0;state.tourActive=true;if(!window.matchMedia('(max-width:760px)').matches&&state.sidebarCollapsed){state.tourRestoreCollapsed=true;state.sidebarCollapsed=false;render();return;}showWalkthrough()});
-  document.querySelectorAll('[data-page]').forEach(btn=>btn.addEventListener('click',()=>{state.page=btn.dataset.page;state.editingId=null;render()}));
+  document.querySelectorAll('[data-page]').forEach(btn=>btn.addEventListener('click',async()=>{state.page=btn.dataset.page;state.editingId=null;render();if(state.page==='recap')await loadAnnual()}));
   document.querySelectorAll('input[type="month"],input[type="date"]').forEach(input=>input.addEventListener('click',()=>{if(typeof input.showPicker==='function'){try{input.showPicker()}catch(_){/* Native picker may already be open. */}}}));
   document.querySelectorAll('[data-role]').forEach(btn=>btn.addEventListener('click',()=>{if(btn.dataset.role==='ADMIN'){if(state.role!=='ADMIN')adminPasswordModal();return;}state.role='VIEWER';state.adminToken=null;if(['entry','employees','rules'].includes(state.page))state.page='dashboard';render();toast('Mode Viewer aktif.');}));
   document.querySelector('#mobile-menu')?.addEventListener('click',()=>{document.querySelector('#sidebar').classList.toggle('open');document.querySelector('#sidebar-backdrop').classList.toggle('open');});
@@ -301,7 +302,7 @@ function bind(){
   document.querySelector('#sidebar-backdrop')?.addEventListener('click',()=>{document.querySelector('#sidebar').classList.remove('open');document.querySelector('#sidebar-backdrop').classList.remove('open');});
   document.querySelector('#outlet-filter')?.addEventListener('change',e=>{state.outlet=e.target.value;render()});
   document.querySelector('#month-filter')?.addEventListener('change',async e=>{state.month=e.target.value;state.rotationDraft={};await load();render()});
-  document.querySelector('#recap-year')?.addEventListener('change',async e=>{state.recapYear=e.target.value;await load();render()});
+  document.querySelector('#recap-year')?.addEventListener('change',async e=>{state.recapYear=e.target.value;state.annualLoadedYear=null;render();await loadAnnual()});
   document.querySelector('#recap-position')?.addEventListener('change',e=>{state.recapPosition=e.target.value;render()});
   document.querySelector('#employee-filter')?.addEventListener('change',e=>{state.selectedEmployee=e.target.value;render()});
   document.querySelectorAll('[data-select-employee]').forEach(button=>button.addEventListener('click',()=>{state.selectedEmployee=button.dataset.selectEmployee;state.page='scorecard';render();}));
@@ -383,8 +384,9 @@ function confirmVoid(id) {
 }
 
 async function load() {
-  const data=await api(`/api/bootstrap?month=${encodeURIComponent(state.month)}&year=${encodeURIComponent(state.recapYear)}`);Object.assign(state,data);
+  const data=await api(`/api/bootstrap?month=${encodeURIComponent(state.month)}`);Object.assign(state,data);
 }
+async function loadAnnual(){if(state.annualLoading||state.annualLoadedYear===state.recapYear)return;const year=state.recapYear;state.annualLoading=true;render();try{const data=await api(`/api/annual-scores?year=${encodeURIComponent(year)}`);if(state.recapYear===year){state.annualScores=data.annualScores;state.annualLoadedYear=year}}catch(error){toast(error.message,'error')}finally{state.annualLoading=false;render()}}
 
 window.addEventListener('scroll',updateWalkthroughPosition,true);
 window.addEventListener('resize',updateWalkthroughPosition);
