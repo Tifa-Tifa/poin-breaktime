@@ -12,6 +12,7 @@ create table if not exists public.employees (
   status text not null default 'ACTIVE' check (status in ('ACTIVE','INACTIVE')),
   city text,
   source text,
+  employment_start_date date,
   updated_at timestamptz
 );
 
