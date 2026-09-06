@@ -384,7 +384,7 @@ function confirmVoid(id) {
 }
 
 async function load() {
-  const data=await api(`/api/bootstrap?month=${encodeURIComponent(state.month)}`);Object.assign(state,data);
+  const data=await api(`/api/bootstrap?month=${encodeURIComponent(state.month)}`),employees=new Map(data.employees.map(item=>[item.id,item])),rules=new Map(data.rules.map(item=>[item.id,item])),outlets=new Map(data.outlets.map(item=>[item.id,item])),hydrate=entry=>({...entry,employee:(()=>{const item=employees.get(entry.employeeId);return item?{id:item.id,name:item.name,position:item.position,role:item.position,outlet:item.outlet}:null})(),rule:(()=>{const item=rules.get(entry.ruleId);return item?{id:item.id,description:item.description,category:item.category}:null})(),outlet:(()=>{const item=outlets.get(entry.outletId);return item?{id:item.id,name:item.name}:null})()});data.entries=data.entries.map(hydrate);data.autoExclusions=data.autoExclusions.map(hydrate);data.daysOff=data.daysOff.map(item=>({...item,employee:employees.get(item.employeeId)}));Object.assign(state,data);
 }
 async function loadAnnual(){if(state.annualLoading||state.annualLoadedYear===state.recapYear)return;const year=state.recapYear;state.annualLoading=true;render();try{const data=await api(`/api/annual-scores?year=${encodeURIComponent(year)}`);if(state.recapYear===year){state.annualScores=data.annualScores;state.annualLoadedYear=year}}catch(error){toast(error.message,'error')}finally{state.annualLoading=false;render()}}
 
