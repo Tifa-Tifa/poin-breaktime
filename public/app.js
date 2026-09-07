@@ -164,6 +164,52 @@ function activityPage() {
     <section class="panel"><div class="table-wrap"><table class="data-table"><thead><tr><th>Tanggal</th><th>Karyawan</th><th>Aktivitas</th><th>Kategori</th><th>Kelipatan</th><th>Poin</th>${state.role==='ADMIN'?'<th>Aksi</th>':''}</tr></thead><tbody>${entries.map(e=>`<tr><td>${dateFmt(e.date)}</td><td><div class="employee-cell"><div class="avatar">${initials(e.employee.name)}</div><div><strong>${e.employee.name}</strong><br><small>${e.employee.role} · ${e.employee.outlet||'BELUM DITEMPATKAN'}</small></div></div></td><td>${e.rule.description}${e.entryKind==='AUTO'?'<br><small>Otomatis</small>':''}</td><td><span class="pill ${e.rule.category}">${e.rule.category}</span></td><td>${e.multiplier>1?`${e.multiplier}×`:'—'}</td><td><strong class="${e.totalPoints<0?'score negative':'score'}">${e.totalPoints>0?'+':''}${fmt(e.totalPoints)}</strong></td>${state.role==='ADMIN'?`<td>${e.entryKind==='AUTO'?'<span class="status-chip ACTIVE">OTOMATIS</span>':`<div class="row-actions"><button data-edit="${e.id}" title="Edit">${icon('edit')}</button><button data-void="${e.id}" title="Batalkan">${icon('trash')}</button></div>`}</td>`:''}</tr>`).join('')||`<tr><td colspan="7">${empty('Tidak ada data','Ubah filter atau tambahkan aktivitas baru.')}</td></tr>`}</tbody></table></div></section>`);
 }
 
+function employeeSearchDropdown(employees, selected) {
+  return `<div class="employee-picker"><div class="employee-picker-control">${icon('search')}<input id="employee-filter" role="combobox" aria-label="Cari dan pilih karyawan" aria-autocomplete="list" aria-expanded="false" aria-controls="employee-options" autocomplete="off" placeholder="Cari nama karyawan..." value="${escapeHtml(selected?.name||'')}"><button type="button" class="employee-picker-toggle" aria-label="Buka pilihan karyawan" aria-controls="employee-options" aria-expanded="false">▾</button></div><div id="employee-options" class="employee-picker-options" role="listbox" aria-label="Karyawan" hidden>${employees.map((e,i)=>`<div id="employee-option-${i}" role="option" aria-selected="${e.id===selected?.id}" data-employee-id="${escapeHtml(e.id)}" data-search="${escapeHtml(`${e.name} ${e.position}`.toLocaleLowerCase('id'))}"><strong>${escapeHtml(e.name)}</strong><small>${escapeHtml(e.position)}</small></div>`).join('')}<p class="employee-picker-empty" role="status" hidden>Karyawan tidak ditemukan.</p></div></div>`;
+}
+
+function bindEmployeeSearch() {
+  bindEmployeeSearch.controller?.abort();
+  const picker=document.querySelector('.employee-picker');
+  if(!picker)return;
+  const controller=new AbortController();
+  bindEmployeeSearch.controller=controller;
+  const input=picker.querySelector('input'), toggle=picker.querySelector('button'), list=picker.querySelector('[role="listbox"]');
+  const options=[...list.querySelectorAll('[role="option"]')];
+  const selectedName=input.value;
+  let active=-1;
+  const visible=()=>options.filter(option=>!option.hidden);
+  const highlight=index=>{
+    const items=visible();active=index;
+    options.forEach(option=>option.classList.remove('highlighted'));
+    input.removeAttribute('aria-activedescendant');
+    if(items[index]){items[index].classList.add('highlighted');input.setAttribute('aria-activedescendant',items[index].id);items[index].scrollIntoView({block:'nearest'});}
+  };
+  const open=(query='')=>{
+    list.hidden=false;input.setAttribute('aria-expanded','true');toggle.setAttribute('aria-expanded','true');
+    options.forEach(option=>option.hidden=!option.dataset.search.includes(query.trim().toLocaleLowerCase('id')));
+    list.querySelector('[role="status"]').hidden=visible().length>0;
+    highlight(-1);
+  };
+  const close=()=>{list.hidden=true;input.value=selectedName;input.setAttribute('aria-expanded','false');toggle.setAttribute('aria-expanded','false');highlight(-1)};
+  const choose=option=>{if(!option)return;state.selectedEmployee=option.dataset.employeeId;render();document.querySelector('#employee-filter')?.focus();};
+  input.addEventListener('click',()=>{if(list.hidden){open();input.select();}});
+  input.addEventListener('input',()=>open(input.value));
+  toggle.addEventListener('click',()=>{if(list.hidden){open();input.focus();input.select();}else close();});
+  list.addEventListener('mousedown',event=>event.preventDefault());
+  list.addEventListener('click',event=>choose(event.target.closest('[role="option"]')));
+  input.addEventListener('keydown',event=>{
+    if(event.key==='ArrowDown'||event.key==='ArrowUp'){
+      event.preventDefault();if(list.hidden)open();
+      const count=visible().length;if(count)highlight((active+(event.key==='ArrowDown'?1:active<0?0:-1)+count)%count);
+    }else if(event.key==='Enter'&&!list.hidden){event.preventDefault();choose(visible()[active<0?0:active]);}
+    else if(event.key==='Escape'){event.preventDefault();close();}
+    else if(event.key==='Tab')close();
+  });
+  picker.addEventListener('focusout',event=>{if(!picker.contains(event.relatedTarget))close();});
+  document.addEventListener('pointerdown',event=>{if(!picker.contains(event.target))close();},{signal:controller.signal});
+}
+
 function scorecardPage() {
   const available = state.employees.filter(e=>e.status==='ACTIVE'&&e.position!=='KAPTEN'&&(state.outlet==='SEMUA'||employeeOutletName(e.id)===state.outlet)&&matchesSearch(e.name,e.position,e.gender,employeeOutletName(e.id)));
   if (!available.find(e=>e.id===state.selectedEmployee) && available[0]) state.selectedEmployee=available[0].id;
@@ -182,7 +228,7 @@ function scorecardPage() {
     if (!rows.length) return '';
     return `<tr class="group"><td colspan="${days+2}">${group}</td></tr>${rows.map(rule=>`<tr><td>${rule.description}</td>${Array.from({length:days},(_,i)=>{const value=entries.filter(e=>e.ruleId===rule.id&&Number(e.date.slice(8,10))===i+1).reduce((a,e)=>a+e.totalPoints,0);return `<td class="${value>0?'positive':value<0?'negative':''}">${value?fmt(value):''}</td>`}).join('')}<td class="val">${fmt(entries.filter(e=>e.ruleId===rule.id).reduce((a,e)=>a+e.totalPoints,0))}</td></tr>`).join('')}`;
   }).join('');
-  return shell(`${pageHead('Poin Individu','Scorecard bulanan dengan tampilan harian seperti sheet POIN.',filters(`<select class="filter" id="employee-filter">${available.map(e=>`<option value="${e.id}" ${e.id===state.selectedEmployee?'selected':''}>${e.name}</option>`).join('')}</select>`))}
+  return shell(`${pageHead('Poin Individu','Scorecard bulanan dengan tampilan harian seperti sheet POIN.',filters(employeeSearchDropdown(available,employee)))}
     ${employee?`<section class="panel"><div class="scorecard-head"><div class="avatar">${initials(employee.name)}</div><div><h2>${employee.name}</h2><p>${employee.position} · ${employee.gender} · ${employeeOutletName(employee.id)}</p></div><div class="scorecard-total"><strong>${total>0?'+':''}${fmt(total)}</strong><span>POIN TERCAPAI</span></div></div><div class="table-wrap">${matrix?`<table class="matrix"><thead><tr><th>Uraian disiplin</th>${Array.from({length:days},(_,i)=>`<th>${i+1}</th>`).join('')}<th>Total</th></tr></thead><tbody>${matrix}</tbody></table>`:empty('Belum ada poin','Belum ada catatan untuk karyawan pada periode ini.')}</div></section>`:empty('Karyawan tidak ditemukan','Pilih outlet lain untuk melihat data.')}<div class="section-title point-guide-title"><div><h2>Daftar Uraian Disiplin ${employee?`· ${employee.position}`:''}</h2><p>Referensi uraian dan nilai dari sheet ${employee?.name||'POIN'} sesuai jabatan</p></div></div><section class="point-guide-grid">${pointGuide}</section>`);
 }
 
@@ -352,7 +398,7 @@ function bind(){
   document.querySelector('#month-filter')?.addEventListener('change',async e=>{state.month=e.target.value;state.rotationDraft={};await load();render()});
   document.querySelector('#recap-year')?.addEventListener('change',async e=>{state.recapYear=e.target.value;state.annualLoadedYear=null;render();await loadAnnual()});
   document.querySelector('#recap-position')?.addEventListener('change',e=>{state.recapPosition=e.target.value;render()});
-  document.querySelector('#employee-filter')?.addEventListener('change',e=>{state.selectedEmployee=e.target.value;render()});
+  bindEmployeeSearch();
   document.querySelectorAll('[data-select-employee]').forEach(button=>button.addEventListener('click',()=>{state.selectedEmployee=button.dataset.selectEmployee;state.page='scorecard';render();}));
   document.querySelector('#global-search')?.addEventListener('input',e=>{state.search=e.target.value;render();const input=document.querySelector('#global-search');input?.focus();input?.setSelectionRange(state.search.length,state.search.length)});
   document.querySelectorAll('[data-edit]').forEach(b=>b.addEventListener('click',()=>editEntryModal(state.entries.find(e=>e.id===b.dataset.edit))));
