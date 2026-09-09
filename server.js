@@ -7,7 +7,7 @@ const { readDb, writeDb, writeEntryBatch, readEntryYearRange, readEmployeeStartD
 const PORT = Number(process.env.PORT || 4173);
 const ROOT = __dirname;
 const PUBLIC_DIR = path.join(ROOT, 'public');
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'Athifayangbuat';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'athifamadeit';
 const ADMIN_SESSION_SECRET = process.env.ADMIN_SESSION_SECRET || ADMIN_PASSWORD;
 function resolveAssignment(db, employeeId, date) {
   return db.assignments?.filter(a => a.employeeId === employeeId && a.effectiveFrom <= date && (!a.effectiveTo || a.effectiveTo >= date)).sort((a,b) => b.effectiveFrom.localeCompare(a.effectiveFrom))[0];

@@ -1,3 +1,17 @@
+// Persist only navigation, never admin credentials or unsaved point entries.
+const navigationStorageKey = 'breaktime-navigation-v1';
+const navigationPages = ['dashboard','recap','activity','scorecard','entry','employees','outlets','rules'];
+function restoreNavigation() {
+  try {
+    const saved=JSON.parse(localStorage.getItem(navigationStorageKey)||'null');
+    if(!saved||!navigationPages.includes(saved.page))return {};
+    return {page:saved.page,...(typeof saved.selectedEmployee==='string'?{selectedEmployee:saved.selectedEmployee}:{})};
+  } catch { return {}; }
+}
+function persistNavigation() {
+  try { localStorage.setItem(navigationStorageKey,JSON.stringify({page:state.page,selectedEmployee:state.selectedEmployee})); }
+  catch { /* Navigation still works if browser storage is unavailable. */ }
+}
 const state = {
   role: 'VIEWER', adminToken: null,
   page: 'dashboard',
@@ -9,7 +23,8 @@ const state = {
   pointGroups: (()=>{try{const groups=JSON.parse(localStorage.getItem('pointGroups-v1')||'[]');return Array.isArray(groups)?groups.filter(g=>g&&typeof g.id==='string'&&typeof g.name==='string'&&Array.isArray(g.ruleIds)):[]}catch{return[]}})(),
   pointGroup: null,
   tourActive: false, tourStep: 0, tourRestoreCollapsed: false,
-  employeeFilters: { position:'SEMUA', gender:'SEMUA', city:'SEMUA', status:'SEMUA', outlet:'SEMUA' }
+  employeeFilters: { position:'SEMUA', gender:'SEMUA', city:'SEMUA', status:'SEMUA', outlet:'SEMUA' },
+  ...restoreNavigation()
 };
 const pendingPointSaves = new Set();
 
@@ -330,7 +345,7 @@ function showWalkthrough(){
   layer.querySelector('[data-tour-prev]')?.addEventListener('click',()=>{state.tourStep--;showWalkthrough()});
   layer.querySelector('[data-tour-next]').onclick=()=>{if(state.tourStep===steps.length-1)closeWalkthrough();else{state.tourStep++;showWalkthrough()}};
 }
-function render(){if(state.tourActive&&!window.matchMedia('(max-width:760px)').matches&&state.sidebarCollapsed){state.tourRestoreCollapsed=true;state.sidebarCollapsed=false;}const views={dashboard,recap:recapPage,activity:activityPage,scorecard:scorecardPage,entry:entryPage,employees:employeesPage,outlets:outletsPage,rules:rulesPage};document.querySelector('.walkthrough-layer')?.remove();document.querySelector('#app').innerHTML=(views[state.page]||dashboard)();bind();requestAnimationFrame(showWalkthrough);}
+function render(){if(state.tourActive&&!window.matchMedia('(max-width:760px)').matches&&state.sidebarCollapsed){state.tourRestoreCollapsed=true;state.sidebarCollapsed=false;}const views={dashboard,recap:recapPage,activity:activityPage,scorecard:scorecardPage,entry:entryPage,employees:employeesPage,outlets:outletsPage,rules:rulesPage};document.querySelector('.walkthrough-layer')?.remove();document.querySelector('#app').innerHTML=(views[state.page]||dashboard)();persistNavigation();bind();requestAnimationFrame(showWalkthrough);}
 function selectCardEmployee(input){
   const ruleId=input.dataset.cardEmployeeSearch,employee=state.employees.find(e=>e.name.toLowerCase()===input.value.trim().toLowerCase());
   if(!employee){input.setCustomValidity('Pilih nama karyawan dari daftar.');input.reportValidity();return;}
@@ -488,6 +503,6 @@ async function loadAnnual(){if(state.annualLoading||state.annualLoadedYear===sta
 
 window.addEventListener('scroll',updateWalkthroughPosition,true);
 window.addEventListener('resize',updateWalkthroughPosition);
-load().then(render).catch(error=>{document.querySelector('#app').innerHTML=`<div class="app-loading"><div class="brand-mark">!</div><strong>Dashboard tidak dapat dimuat</strong><span>${error.message}</span></div>`});
+load().then(async()=>{render();if(state.page==='recap')await loadAnnual();}).catch(error=>{document.querySelector('#app').innerHTML=`<div class="app-loading"><div class="brand-mark">!</div><strong>Dashboard tidak dapat dimuat</strong><span>${error.message}</span></div>`});
 function captainModal(outletId,group){const current=state.employees.find(e=>e.position==='KAPTEN'&&state.rotationDraft[e.id]?.outletId===outletId&&state.rotationDraft[e.id]?.captainGroup===group),captains=state.employees.filter(e=>e.status==='ACTIVE'&&e.position==='KAPTEN');const host=modalFrame('Ganti Kapten',`<p>Pilih kapten untuk memimpin tim ini.</p><div class="field"><label>Nama kapten</label><select id="captain-choice"><option value="">Belum ditentukan</option>${captains.map(e=>`<option value="${e.id}" ${e.id===current?.id?'selected':''}>${e.name}</option>`).join('')}</select></div>`,'Terapkan');host.querySelector('[data-submit]').onclick=()=>{const id=host.querySelector('#captain-choice').value;if(current&&current.id!==id)state.rotationDraft[current.id]={...state.rotationDraft[current.id],outletId:''};if(id)state.rotationDraft[id]={outletId,captainGroup:group};host.remove();render();toast('Kapten diganti. Klik Simpan rotasi untuk menyimpan.');};}
 const baseRuleModal=ruleModal;ruleModal=function(rule){baseRuleModal(rule);const hosts=document.querySelectorAll('.modal-backdrop'),host=hosts[hosts.length-1],type=host.querySelector('[name="automationType"]'),settings=host.querySelector('.automation-settings');if(!type||!settings)return;type.insertAdjacentHTML('beforeend','<option value="CANCEL_RULE">Membatalkan poin lain</option>');type.value=rule?.automation?.type||type.value;const field=document.createElement('label');field.innerHTML=`Poin yang dibatalkan<select name="targetRuleId"><option value="">Pilih aturan…</option>${state.rules.filter(r=>r.id!==rule?.id).map(r=>`<option value="${r.id}" ${rule?.automation?.targetRuleId===r.id?'selected':''}>${r.description}</option>`).join('')}</select>`;settings.insertBefore(field,settings.querySelector('.automation-check'));};

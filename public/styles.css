@@ -171,3 +171,6 @@ input[type="month"],input[type="date"]{cursor:pointer}
 .employee-picker-options [hidden],.employee-picker-options[hidden]{display:none!important}
 .employee-picker-empty{padding:12px;font-size:13px;color:#746c80;margin:0}
 @media(max-width:760px){.employee-picker{width:100%}}
+/* Keep long forms inside the viewport and scroll the dialog, not the page. */
+.modal-backdrop{overflow-y:auto;overscroll-behavior:contain}
+.modal{box-sizing:border-box;min-height:0;max-height:calc(100vh - 40px);max-height:calc(100dvh - 40px);overflow-y:auto;overscroll-behavior-y:contain;scrollbar-gutter:stable}
