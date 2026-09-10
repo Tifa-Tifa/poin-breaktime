@@ -403,7 +403,7 @@ function openEntryCalendar(trigger){
 
 function bind(){
   document.querySelector('#open-walkthrough')?.addEventListener('click',()=>{state.tourStep=0;state.tourActive=true;if(!window.matchMedia('(max-width:760px)').matches&&state.sidebarCollapsed){state.tourRestoreCollapsed=true;state.sidebarCollapsed=false;render();return;}showWalkthrough()});
-  document.querySelectorAll('[data-page]').forEach(btn=>btn.addEventListener('click',async()=>{state.page=btn.dataset.page;state.editingId=null;render();if(state.page==='recap')await loadAnnual()}));
+  document.querySelectorAll('[data-page]').forEach(btn=>btn.addEventListener('click',async()=>{state.page=btn.dataset.page;state.editingId=null;render();window.scrollTo({top:0,left:0,behavior:'instant'});if(state.page==='recap')await loadAnnual()}));
   document.querySelectorAll('input[type="month"],input[type="date"]').forEach(input=>input.addEventListener('click',()=>{if(typeof input.showPicker==='function'){try{input.showPicker()}catch(_){/* Native picker may already be open. */}}}));
   document.querySelectorAll('[data-role]').forEach(btn=>btn.addEventListener('click',()=>{if(btn.dataset.role==='ADMIN'){if(state.role!=='ADMIN')adminPasswordModal();return;}state.role='VIEWER';state.adminToken=null;if(['entry','employees','rules'].includes(state.page))state.page='dashboard';render();toast('Mode Viewer aktif.');}));
   document.querySelector('#mobile-menu')?.addEventListener('click',()=>{document.querySelector('#sidebar').classList.toggle('open');document.querySelector('#sidebar-backdrop').classList.toggle('open');});
@@ -414,7 +414,7 @@ function bind(){
   document.querySelector('#recap-year')?.addEventListener('change',async e=>{state.recapYear=e.target.value;state.annualLoadedYear=null;render();await loadAnnual()});
   document.querySelector('#recap-position')?.addEventListener('change',e=>{state.recapPosition=e.target.value;render()});
   bindEmployeeSearch();
-  document.querySelectorAll('[data-select-employee]').forEach(button=>button.addEventListener('click',()=>{state.selectedEmployee=button.dataset.selectEmployee;state.page='scorecard';render();}));
+  document.querySelectorAll('[data-select-employee]').forEach(button=>button.addEventListener('click',()=>{state.selectedEmployee=button.dataset.selectEmployee;state.page='scorecard';render();window.scrollTo({top:0,left:0,behavior:'instant'});}));
   document.querySelector('#global-search')?.addEventListener('input',e=>{state.search=e.target.value;render();const input=document.querySelector('#global-search');input?.focus();input?.setSelectionRange(state.search.length,state.search.length)});
   document.querySelectorAll('[data-edit]').forEach(b=>b.addEventListener('click',()=>editEntryModal(state.entries.find(e=>e.id===b.dataset.edit))));
   document.querySelectorAll('[data-void]').forEach(btn=>btn.addEventListener('click',()=>confirmVoid(btn.dataset.void)));
